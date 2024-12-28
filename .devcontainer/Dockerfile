@@ -5,6 +5,7 @@ RUN apt-get update && apt-get install -y \
   curl \
   unzip \
   gcc \
+  xz-utils \
   # sudo \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
@@ -22,4 +23,6 @@ RUN groupadd --gid $USER_GID $USER_NAME \
 USER $USER_NAME
 
 # Rustのインストール
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y
+# wasmランタイムのインストール
+RUN curl https://wasmtime.dev/install.sh -sSf | bash
