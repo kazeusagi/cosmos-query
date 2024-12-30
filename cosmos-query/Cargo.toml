@@ -8,3 +8,7 @@ crate-type = ["cdylib"]
 
 [dependencies]
 wasm-bindgen = "0.2.99"
+
+[profile.release]
+lto = true
+opt-level = 's'
