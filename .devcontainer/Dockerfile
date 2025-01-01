@@ -1,19 +1,19 @@
-FROM debian:bookworm-slim
+# Pythonのセットアップが面倒くさいのでベースイメージに指定
+FROM python:3-slim-bookworm
 
 RUN apt-get update && apt-get install -y \
   git \
   curl \
   unzip \
-  gcc \
-  xz-utils
+  build-essential \
+  xz-utils \
+  pipx \
+  && pipx ensurepath
   # sudo \
   
 # Node.jsのインストール
-RUN curl -fsSL https://deb.nodesource.com/setup_23.x | bash - \
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
 && apt-get install -y nodejs
-
-# Pythonのインストール
-RUN apt-get install -y python3
 
 # aptのキャッシュ削除
 RUN apt-get clean \
@@ -33,9 +33,10 @@ USER $USER_NAME
 
 # Rustのインストール
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y
-# wasmランタイムのインストール
-RUN curl https://wasmtime.dev/install.sh -sSf | bash
 # wasm開発用ツールのインストール
 # MEMO: wasm-packは実行可能形式でインストールしたいため、ここで明示的にインストールする
 ENV PATH="/home/$USER_NAME/.cargo/bin:$PATH"
 RUN cargo install wasm-pack
+
+# Poetryのインストール
+RUN pipx install poetry
